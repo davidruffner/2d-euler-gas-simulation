@@ -1,46 +1,46 @@
 import pylab, optparse, os, shutil
 
 #Method that runs the eulerSolve2D program in C It makes a plot of
-# the estimated solutions
+# the estimated solutions 
 #------------------------------------------------------------------
 def changeParamEntry(filename, variable,value):
     #Initialize parmeter file
     # variable is the name of the variable in quotes
     # and values is the value of the variable
     #--------------------------------------------------------
-
+    
     pfile = open(filename, 'r')
 
-
+    
     #Time step
-
-
+    
+    
     lines = pfile.readlines()
     strvals = [l.strip().split() for l in lines]
 
     inputNameList = list();
     inputValuList = list();
-
+    
     for v in strvals:
-
+        
         inputNameList.append(v[0]);
         if(v[0] == variable):
             inputValuList.append(value)
         else:
             inputValuList.append(v[2]);
 
-
-
+    
+    
     pfile.close()
 
-
+    
     pfile = open(filename, 'w')
 
     for infile_name,infile_value in zip(inputNameList , inputValuList):
-
+        
         infile_value = str(infile_value)
         pfile.write("%s = %s \n" % (infile_name, infile_value) )
-
+        
     pfile.close()
 
 def readParamEntry(filename, variable):
@@ -48,21 +48,21 @@ def readParamEntry(filename, variable):
     # variable is the name of the variable in quotes
     # and values is the value of the variable
     #--------------------------------------------------------
-
+    
     pfile = open(filename, 'r')
 
-
+    
     #Time step
-
-
+    
+    
     lines = pfile.readlines()
     strvals = [l.strip().split() for l in lines]
 
     inputNameList = list();
     inputValuList = list();
-
+    
     for v in strvals:
-
+        
         inputNameList.append(v[0]);
         if(v[0] == variable):
             pfile.close()
@@ -71,7 +71,7 @@ def readParamEntry(filename, variable):
     return 0
 
 def copyResults(dest):
-
+    
     #Danger I am going to remove the existing dest directory
     os.system("rm -r -v "+dest)
 
@@ -101,9 +101,9 @@ def copyResults(dest):
     shutil.copy("run/Finaly.cfg", dest)
 
     shutil.copy("param.cfg", dest)
-    print "done"
-
-
+    print "done"    
+    
+    
 
 #  run c program
 #-----------------------------
@@ -111,22 +111,20 @@ def runEuler():
     #  run c program with mpi
     #-----------------------------
     #with 2 processos
-    #os.system("mpiexec -np 2 ./eulerSolve2D")
-    print 'Running euler!!!!!!!'
+    #os.system("mpiexec -np 8 ./eulerSolve")
     os.system("./eulerSolve2D")
-    print 'Running euler!!!!!!!'
 
 
 
 def plotEulerConsVals(Ufile):#Don't use this
-
+    
     # Plot Results
     #-------------------------------
-
+     
 
 
     #Initial Conditions 2nd Order
-
+        
     infile_name = Ufile
     infile = open(infile_name)
     lines = infile.readlines()
@@ -162,7 +160,7 @@ def plotXslice(UfileX,Ufile):
     [x.append(float(v[0])) for v in strvals]
 
     #Get the array values
-
+     
     infile_name = Ufile
     infile = open(infile_name)
     lines = infile.readlines()
@@ -171,7 +169,7 @@ def plotXslice(UfileX,Ufile):
     strvals = [l.strip().split() for l in lines]
     Ny = len(strvals)
     [val.append(float(vi)) for vi in strvals[Ny/2]]
-
+    
     pylab.array(val)
     pylab.plot(x,val,label='X slice')
 
@@ -187,7 +185,7 @@ def plotYslice(UfileY,Ufile):
     [x.append(float(v[0])) for v in strvals]
 
     #Get the array values
-
+     
     infile_name = Ufile
     infile = open(infile_name)
     lines = infile.readlines()
@@ -196,7 +194,7 @@ def plotYslice(UfileY,Ufile):
     strvals = [l.strip().split() for l in lines]
     Ny = len(strvals)
     [val.append(float(v[Ny/2])) for v in strvals]
-
+    
     pylab.array(val)
     pylab.plot(x,val,label='Y slice')
 
@@ -210,11 +208,11 @@ def plot45slice(UfileX,Ufile):
     strvals = [l.strip().split() for l in lines]
     [x.append(float(v[0])) for v in strvals]
     d = list()
-
+    
     [d.append(pylab.sqrt(2)*xi) for xi in x]
 
     #Get the array values
-
+     
     infile_name = Ufile
     infile = open(infile_name)
     lines = infile.readlines()
@@ -225,9 +223,9 @@ def plot45slice(UfileX,Ufile):
     for v in strvals:
         val.append(float(v[i]))
         i = i+1
-
+    
     pylab.plot(d,val,label='Diagonal slice')
-
+    
 
 
 def plotValue(UfileX, UfileY, Ufile):
@@ -239,7 +237,7 @@ def plotValue(UfileX, UfileY, Ufile):
     x = list()
     strvals = [l.strip().split() for l in lines]
     [x.append(float(v[0])) for v in strvals]
-
+    
 
     #Get the yvalues
     infile_name = UfileY
@@ -249,9 +247,9 @@ def plotValue(UfileX, UfileY, Ufile):
     y = list()
     strvals = [l.strip().split() for l in lines]
     [y.append(float(v[0])) for v in strvals]
-
+    
     #Get the array values
-
+     
     infile_name = Ufile
     infile = open(infile_name)
     lines = infile.readlines()
@@ -264,10 +262,10 @@ def plotValue(UfileX, UfileY, Ufile):
         rho.append(rhox)
         for rhoij in rhox:
             totalMass = totalMass+rhoij
-
+        
     print infile_name+" "+str(totalMass)
-
-
+    
+    
     pylab.contourf(x,y,rho)
     pylab.colorbar()
 
@@ -278,7 +276,7 @@ def runEuler1times(dt, title, UfileX, UfileY, Uinitial, Ufinal,
     changeParamEntry("time.cfg","t",0)
     time = readParamEntry("time.cfg", "t")
     runEuler()
-
+    
     pylab.figure()
     pylab.suptitle(title)
     pylab.subplot(2,1,1)
@@ -290,21 +288,21 @@ def runEuler1times(dt, title, UfileX, UfileY, Uinitial, Ufinal,
     pylab.subplot(2,1,2)
     plotValue(UfileX, UfileY, Ufinal)
     pylab.xlabel("x at t= " + time)
-
-
+    
+    
 def runEulerNtimes(N, dt, title, InitialType, dest, picDest):
     count = 0
-
+    
     changeParamEntry("param.cfg","InitialType",InitialType)
     changeParamEntry("param.cfg","runTime",dt)
     changeParamEntry("time.cfg","t",0)
     time = readParamEntry("time.cfg", "t")
     strTime = str(time)
-
+    
     runEuler()
     count = count+1
-
-
+    
+    
     numString = str(count)
     #copyResults(dest+"iter"+numString)
 
@@ -334,12 +332,12 @@ def runEulerNtimes(N, dt, title, InitialType, dest, picDest):
     pylab.title("Pressure")
     pylab.xlabel("x")
     pylab.ylabel("y")
-
+    
     pylab.savefig(picDest+strTime+".png")
 
     time = readParamEntry("time.cfg", "t")
     strTime = str(time)
-
+    
     fig2=pylab.figure()
     fig2.subplots_adjust(left=.125, bottom=.1, right=.9, top=.9,
                 wspace=.4, hspace=.3)
@@ -368,10 +366,10 @@ def runEulerNtimes(N, dt, title, InitialType, dest, picDest):
     pylab.xlabel("x")
     pylab.ylabel("y")
     pylab.savefig(picDest+strTime+".png")
-
-
+   
+    
     changeParamEntry("param.cfg","InitialType",0)
-
+    
     for i in range(N):
         runEuler()
         count = count+1
@@ -386,7 +384,7 @@ def runEulerNtimes(N, dt, title, InitialType, dest, picDest):
                 wspace=.4, hspace=.3)
 
         pylab.suptitle(title + "at time " + strTime)
-
+        
         pylab.subplot(2,2,1)
         plotValue("run/Finalx.cfg","run/Finaly.cfg","run/FinalRho.cfg")
         pylab.xlabel("x")
@@ -416,7 +414,7 @@ def runEulerNtimes(N, dt, title, InitialType, dest, picDest):
 
 
 
-#changeParamEntry("param.cfg","InitialType",0)
+#changeParamEntry("param.cfg","InitialType",0)    
 #runEuler()
 
 
@@ -425,7 +423,7 @@ def runEulerNtimes(N, dt, title, InitialType, dest, picDest):
 
 
 print "ran"
-dt = .1
+dt = .4
 
 BCnum = 4  #1)out, 2)reflecting, 3)periodic,
            # 4)Reflection top and bottom
@@ -435,15 +433,15 @@ IniTyp = 10 #0)read in conserved initial 1)Uniform, 2)Horizontal Strips,
            # 3)Diagonal Strips, 4)Horizontal with
            #pertubation, 5)Inner Square, 6)Inner Circle, 7)Horizonatal Strips
            #pressure for gravity 8)like 7 but with perturbation in vy
-           #9)Gaussian density wave
-           #10) horizontal strips with gravity and vertical perterbation of
+           #9)Gaussian density wave 
+           #10) horizontal strips with gravity and vertical perterbation of 
            #density
 N = 100     #Resolution in x and y
 
 changeParamEntry("param.cfg","BCnum",BCnum)
 changeParamEntry("param.cfg","Nx",N)
-changeParamEntry("param.cfg","Ny",N)
-Num = 6
+changeParamEntry("param.cfg","Ny",N) 
+Num = 4
 
 runEulerNtimes(Num,dt,"Values ",  IniTyp,"12_17_09dGRho", "results/withgravity/KelvinHemGrav/12_22_09g/")#the last arguement is the destination of the png files
 #of the graphs created by this run
