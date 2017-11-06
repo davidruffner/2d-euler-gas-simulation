@@ -2,6 +2,8 @@
 Computational model of breaking wave for NYU computation physics class in 2009.
 
 ## 2nd Order Euler Equations in 2D with Gravity
+![0](https://user-images.githubusercontent.com/6666044/32421021-a2bd7658-c261-11e7-8f1d-ba2a5af47497.png)
+![1 205125](https://user-images.githubusercontent.com/6666044/32421023-a5afdfcc-c261-11e7-8ccc-da8185bca7a4.png)
 
 ### Instructions
 
