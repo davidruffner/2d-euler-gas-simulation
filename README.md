@@ -1,6 +1,8 @@
 # 2d-euler-gas-simulation
 Computational model of breaking wave for NYU computation physics class in 2009.
 
+[Final paper describing results of project](https://github.com/davidruffner/2d-euler-gas-simulation/files/1444628/FinalPaper_dbr250.pdf)
+
 ## 2nd Order Euler Equations in 2D with Gravity
 ![0](https://user-images.githubusercontent.com/6666044/32421021-a2bd7658-c261-11e7-8f1d-ba2a5af47497.png)
 ![1 205125](https://user-images.githubusercontent.com/6666044/32421023-a5afdfcc-c261-11e7-8ccc-da8185bca7a4.png)
